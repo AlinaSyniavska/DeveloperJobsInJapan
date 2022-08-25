@@ -1,13 +1,12 @@
 const {CustomError} = require("../errors");
-const {Types} = require("mongoose");
-const {userQueryValidator} = require("../validators");
+const {Position, Applicant} = require("../dataBase");
 
 module.exports = {
     isIdValid: (req, res, next) => {
         try {
             const {id} = req.params;
 
-            if (!Types.ObjectId.isValid(id)) {
+            if (!Number.isInteger(Number(id)) || !Number.isFinite(Number(id))) {
                 return next(new CustomError('Not valid ID'));
             }
 
@@ -24,6 +23,35 @@ module.exports = {
                 return next(new CustomError(error.details[0].message));
             }
             req[dataType] = value;
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    isItemPresent: (schema) => async (req, res, next) => {
+        try {
+            const {id} = req.params;
+            let who;
+
+            switch (schema) {
+                case Position:
+                    who = 'Position';
+                    break;
+                case Applicant:
+                    who = 'Applicant';
+                    break;
+                default:
+                    who = 'Item';
+            }
+
+            const item = await schema.findOne({_id: id});
+
+            if(!item){
+                return next(new CustomError(`${who} with id ${id} not found`, 404));
+            }
+
+            req.item = item;
             next();
         } catch (e) {
             next(e);

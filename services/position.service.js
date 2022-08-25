@@ -16,14 +16,14 @@ module.exports = {
     createOne: (position) => {
         return Position.create(position);
     },
-/*
-    updateOne: (params = {}, userData, options = {new: true}) => {
-        return User.findOneAndUpdate(params, userData, options);
+
+    updateOne: (params = {}, positionData, options = {new: true}) => {
+        return Position.findOneAndUpdate(params, positionData, options);
     },
 
     deleteOne: (params = {}) => {
-        return User.deleteOne(params);
-    },*/
+        return Position.deleteOne(params);
+    },
 }
 
 function _getUserFilterQuery(filters) {

@@ -1,6 +1,4 @@
-const {userService, passwordService, emailService, positionService} = require("../services");
-
-const {emailActionEnum} = require("../enums");
+const {positionService} = require("../services");
 const {positionPresenter} = require("../presenters");
 
 module.exports = {
@@ -20,25 +18,23 @@ module.exports = {
 
     create: async (req, res, next) => {
         try {
-            const newPosition = await positionService.createOne({...req.body});
-            // const positionForResponse = positionPresenter.positionResponse(newPosition);
+            await positionService.createOne({...req.body});
 
 /*            await Promise.allSettled([
                 emailService.sendMailHbs(email, emailActionEnum.WELCOME, {name})
             ]);*/
 
-            // res.status(201).json(newPosition);
             res.sendStatus(201);
         } catch (e) {
             next(e);
         }
     },
-/*
+
     getById: async (req, res, next) => {
         try {
-            const {user} = req;
-            const userForResponse = userPresenter.userResponse(user);
-            res.json(userForResponse);
+            const {item} = req;
+            const positionForResponse = positionPresenter.positionResponse(item);
+            res.json(positionForResponse);
         } catch (e) {
             next(e);
         }
@@ -47,9 +43,8 @@ module.exports = {
     update: async (req, res, next) => {
         try {
             const {id} = req.params;
-            const updatedUser = await userService.updateOne({_id: id}, req.body);
-            const userForResponse = userPresenter.userResponse(updatedUser);
-            res.status(201).json(userForResponse);
+            await positionService.updateOne({_id: id}, req.body);
+            res.sendStatus(200);
         } catch (e) {
             next(e);
         }
@@ -58,10 +53,10 @@ module.exports = {
     delete: async (req, res, next) => {
         try {
             const {id} = req.params;
-            await userService.deleteOne({_id: id});
+            await positionService.deleteOne({_id: id});
             res.sendStatus(204);
         } catch (e) {
             next(e);
         }
-    },*/
+    },
 };
