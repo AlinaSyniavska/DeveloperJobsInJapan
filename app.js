@@ -7,7 +7,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const socketIO = require('socket.io');
 
-const {positionRouter} = require('./routes');
+const {positionRouter, applicantRouter} = require('./routes');
 
 mongoose.connect(config.MONGO_URL);
 
@@ -32,7 +32,7 @@ if (config.NODE_ENV !== 'prod') {
 app.use(cors());
 
 app.use('/positions', positionRouter);
-
+app.use('/applicants', applicantRouter);
 
 app.use('*', (req, res) => {
     res.status(404).json('Route not found');
