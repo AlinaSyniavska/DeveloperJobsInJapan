@@ -1,3 +1,6 @@
+const {io} = require('socket.io-client');
+const socket = io('http://localhost:5000');
+
 const {positionService} = require("../services");
 const {positionPresenter} = require("../presenters");
 
@@ -19,12 +22,28 @@ module.exports = {
     create: async (req, res, next) => {
         try {
             await positionService.createOne({...req.body});
+            const {category, level, japaneseRequired} = req.body;
 
-/*            await Promise.allSettled([
-                emailService.sendMailHbs(email, emailActionEnum.WELCOME, {name})
-            ]);*/
+            /*            await Promise.allSettled([
+                            emailService.sendMailHbs(email, emailActionEnum.WELCOME, {name})
+                        ]);*/
 
             res.sendStatus(201);
+
+            // socket.to(`category:${category}`).emit('postNewPosition', {postion: {...req.body}, roomId: `category:${category}`})
+            /*            socket.to(`level:${level}`).emit('postNewPosition', {postion: {...req.body}, roomId: `level:${level}`})
+                        if (japaneseRequired === false) {
+                            socket.to('japaneseKnowledge:false').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:false'})
+                        } else {
+                            socket.to('japaneseKnowledge:false').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:false'})
+                            socket.to('japaneseKnowledge:true').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:true'})
+                        }*/
+            socket.emit('postNewPosition', {position: {...req.body}, roomId: `category:${category}`});
+            socket.emit('postNewPosition', {position: {...req.body}, roomId: `level:${level}`});
+            socket.emit('postNewPosition', {position: {...req.body}, roomId: 'japaneseKnowledge:false'})
+            if (japaneseRequired === true) {
+                socket.emit('postNewPosition', {position: {...req.body}, roomId: 'japaneseKnowledge:true'})
+            }
         } catch (e) {
             next(e);
         }
