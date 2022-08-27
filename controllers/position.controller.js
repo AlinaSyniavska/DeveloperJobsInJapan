@@ -1,8 +1,8 @@
-const {io} = require('socket.io-client');
-const socket = io('http://localhost:5000');
-
-const {positionService} = require("../services");
+const {positionService, emailService} = require("../services");
 const {positionPresenter} = require("../presenters");
+const {emailActionEnum} = require("../enums");
+const {searchForSubscription} = require("../helpers");
+const {Applicant} = require("../dataBase");
 
 module.exports = {
     getAll: async (req, res, next) => {
@@ -21,29 +21,24 @@ module.exports = {
 
     create: async (req, res, next) => {
         try {
-            await positionService.createOne({...req.body});
-            const {category, level, japaneseRequired} = req.body;
-
-            /*            await Promise.allSettled([
-                            emailService.sendMailHbs(email, emailActionEnum.WELCOME, {name})
-                        ]);*/
+            const newPosition = await positionService.createOne({...req.body});
+            const {category, level, company, description, japaneseRequired} = newPosition;
+            let japaneseKnowledge;
+            japaneseRequired ? japaneseKnowledge = 'required' : japaneseKnowledge = 'not required';
 
             res.sendStatus(201);
 
-            // socket.to(`category:${category}`).emit('postNewPosition', {postion: {...req.body}, roomId: `category:${category}`})
-            /*            socket.to(`level:${level}`).emit('postNewPosition', {postion: {...req.body}, roomId: `level:${level}`})
-                        if (japaneseRequired === false) {
-                            socket.to('japaneseKnowledge:false').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:false'})
-                        } else {
-                            socket.to('japaneseKnowledge:false').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:false'})
-                            socket.to('japaneseKnowledge:true').emit('postNewPosition', {postion: {...req.body}, roomId: 'japaneseKnowledge:true'})
-                        }*/
-            socket.emit('postNewPosition', {position: {...req.body}, roomId: `category:${category}`});
-            socket.emit('postNewPosition', {position: {...req.body}, roomId: `level:${level}`});
-            socket.emit('postNewPosition', {position: {...req.body}, roomId: 'japaneseKnowledge:false'})
-            if (japaneseRequired === true) {
-                socket.emit('postNewPosition', {position: {...req.body}, roomId: 'japaneseKnowledge:true'})
-            }
+            const applicants = await searchForSubscription.searchRecord({category, level, japanese: japaneseRequired}, Applicant);
+            applicants.forEach(applicant => emailService.sendMail(
+                'alina22syniavska@gmail.com',
+                emailActionEnum.POSITION_ADD,
+                {category, level, company, description, japaneseRequired: japaneseKnowledge}
+            ))
+            /*applicants.forEach(applicant => emailService.sendMail(
+                applicant.email,
+                emailActionEnum.POSITION_ADD,
+                {category, level, company, description, japaneseRequired: japaneseKnowledge}
+            ))*/
         } catch (e) {
             next(e);
         }
@@ -73,9 +68,32 @@ module.exports = {
         try {
             const {id} = req.params;
             await positionService.deleteOne({_id: id});
+
+            const {category, level, company, description, japaneseRequired} = req.item;
+            let japaneseKnowledge;
+            japaneseRequired ? japaneseKnowledge = 'required' : japaneseKnowledge = 'not required';
+
             res.sendStatus(204);
+
+            const applicants = await searchForSubscription.searchRecord({category, level, japanese: japaneseRequired}, Applicant);
+            applicants.forEach(applicant => emailService.sendMail(
+                'alina22syniavska@gmail.com',
+                emailActionEnum.POSITION_REMOVE,
+                {category, level, company, description, japaneseRequired: japaneseKnowledge}
+            ))
+            /*applicants.forEach(applicant => emailService.sendMail(
+                applicant.email,
+                emailActionEnum.POSITION_REMOVE,
+                {category, level, company, description, japaneseRequired: japaneseKnowledge}
+            ))*/
+
+
+
+
         } catch (e) {
             next(e);
         }
     },
 };
+
+

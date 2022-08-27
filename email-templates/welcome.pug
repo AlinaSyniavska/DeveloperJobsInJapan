@@ -2,5 +2,24 @@ extends container
 
 block content
     div
-        p #{userName}. Welcome to platform.
+        p Dear Applicant [#{email}], Welcome to platform.
         | Hope you will have a great experience.
+        br
+        p According to your knowledge, we can offer you the following positions
+
+            script.
+            ul
+                for pos in positionsForResponse
+                    hr
+                    li
+                        span Category: #{pos.category}
+                    li
+                        span Level: #{ pos.level}
+                    li
+                        span Company: #{pos.company}
+                    li
+                        span Description: #{pos.description}
+                    li
+                        span Japanese language: #{pos.japaneseRequired ? 'required' : 'not required'}
+                    hr
+

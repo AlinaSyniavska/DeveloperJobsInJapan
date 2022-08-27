@@ -1,26 +1,34 @@
-const {io} = require('socket.io-client');
-
-const {applicantService} = require("../services");
-const {applicantPresenter} = require("../presenters");
-
-const socket = io('http://localhost:5000');
+const {applicantService, emailService} = require("../services");
+const {applicantPresenter, positionPresenter} = require("../presenters");
+const {searchForSubscription} = require("../helpers");
+const {emailActionEnum} = require("../enums");
+const {Position} = require("../dataBase");
 
 module.exports = {
     create: async (req, res, next) => {
         try {
-            await applicantService.createOne({...req.body});
-            const {categories, level, japaneseKnowledge, email} = req.body;
+            const newApplicant = await applicantService.createOne({...req.body});
+            const {email, categories, japaneseKnowledge, level} = newApplicant;
 
             res.sendStatus(201);
 
-            socket.emit('room:join', {roomId: `level:${level}`, email});
-            categories.forEach(category => socket.emit('room:join', {roomId: `category:${category}`, email}));
-            socket.emit('room:join', {roomId: `japaneseKnowledge:${japaneseKnowledge}`, email});
+            const positions = await searchForSubscription.searchRecord(
+                {category: categories, level, japanese: japaneseKnowledge},
+                Position);
 
-            socket.on('sendEmail', (position) => {
+            const positionsForResponse = positions.map(position => positionPresenter.positionResponse(position));
 
-            })
+            await emailService.sendMail(
+                'alina22syniavska@gmail.com',
+                emailActionEnum.WELCOME,
+                {email, positionsForResponse}
+            )
 
+/*            await emailService.sendMail(
+                email,
+                emailActionEnum.WELCOME,
+                {email, positionsForResponse}
+            )*/
         } catch (e) {
             next(e);
         }

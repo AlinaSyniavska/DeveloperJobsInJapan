@@ -1,10 +1,11 @@
 const {Position} = require("../dataBase");
+const {searchForSubscription} = require("../helpers");
 
 module.exports = {
     findAll: async (query = {}) => {
         const {...otherFilters} = query;
 
-        const queryFilters = _getUserFilterQuery(otherFilters);
+        const queryFilters = searchForSubscription.getUserFilterQuery(otherFilters);
 
         return Position.find(queryFilters);
     },
@@ -26,32 +27,4 @@ module.exports = {
     },
 }
 
-function _getUserFilterQuery(filters) {
-    const searchObject = {};    // prepared mongo queries
 
-    // category - filter positions by category (will be coursed to available categories)
-    // level - filter positions by level
-    // tag - free search in description
-
-    if (filters.category) {
-        Object.assign(searchObject, {
-            category: {$eq: filters.category}
-        })
-    }
-
-    if (filters.level) {
-        Object.assign(searchObject, {
-            level: {$eq: filters.level}
-        })
-    }
-
-    if (filters.tag) {
-        Object.assign(searchObject, {
-            description: {$regex: filters.tag, $options: 'i'}
-        })
-    }
-
-    console.log(JSON.stringify(searchObject, null, 2));
-
-    return searchObject;
-}

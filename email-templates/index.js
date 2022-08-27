@@ -1,18 +1,18 @@
 const {emailActionEnum} = require("../enums");
 
 module.exports = {
+    [emailActionEnum.POSITION_ADD]: {
+        subject: 'Position added',
+        template: 'add-position'
+    },
+
+    [emailActionEnum.POSITION_REMOVE]: {
+        subject: 'Position removed',
+        template: 'remove-position'
+    },
+
     [emailActionEnum.WELCOME]: {
-        subject: 'Welcome on board',
+        subject: 'New Applicant',
         template: 'welcome'
-    },
-
-    [emailActionEnum.FORGOT_PASSWORD]: {
-        subject: 'Opps looks like you forgot password',
-        template: 'forgot-password'
-    },
-
-    [emailActionEnum.LOGOUT]: {
-        subject: 'User was logout',
-        template: 'logout'
     },
 };

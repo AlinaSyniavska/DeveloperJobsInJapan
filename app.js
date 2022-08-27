@@ -2,36 +2,14 @@ require('dotenv').config();
 const {config} = require('./configs');
 
 const express = require('express');
-const {createServer} = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const socketIO = require('socket.io');
 
 const {positionRouter, applicantRouter} = require('./routes');
 
 mongoose.connect(config.MONGO_URL);
 
 const app = express();
-const server = createServer(app);
-
-const io = socketIO(server);
-
-io.on('connection', (socket) => {
-    socket.on('room:join', (joinInfo) => {
-        socket.join(joinInfo.roomId); // call join to subscribe the socket to a given channel (room)
-        console.log(`New Applicant with email ${joinInfo.email} joined into room ${joinInfo.roomId}`);
-    });
-
-    socket.on('postNewPosition', ({position, roomId}) => {
-        console.log(`New position add in room ${roomId}`);
-        console.log(JSON.stringify(position, null, 2));
-        // To all room members
-        io.to(roomId).emit('sendEmail', {position});
-    });
-
-
-
-});
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -57,7 +35,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-server.listen(config.PORT, () => {   // app.listen
+app.listen(config.PORT, () => {   // app.listen
     console.log(`Started on port ${config.PORT}`);
 });
 
