@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "8ca55f51-22f7-42df-8d38-6e81f289e7e6",
+		"name": "DeveloperJobsInJapan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20761832"
+	},
+	"item": [
+		{
+			"name": "positions",
+			"item": [
+				{
+					"name": "positions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}positions",
+							"host": [
+								"{{HOST}}positions"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "nodejs",
+									"disabled": true
+								},
+								{
+									"key": "level",
+									"value": "middle",
+									"disabled": true
+								},
+								{
+									"key": "tag",
+									"value": "relocate",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create position",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// const jsonBody = JSON.parse(responseBody);\r",
+									"\r",
+									"// pm.environment.set(\"itemId\", jsonBody._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": \"angular\",\r\n    \"level\": \"middle\",\r\n    \"company\": \"Rakuten-UA\",\r\n    \"description\": \"We are looking for people who are flexible and highly skilled, with an interest in languages and other cultures. We are open to overseas candidates looking to relocate to Japan.\",\r\n    \"japaneseRequired\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}positions",
+							"host": [
+								"{{HOST}}positions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "position by ID",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"some description\",\r\n    \"japaneseRequired\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}positions/:id",
+							"host": [
+								"{{HOST}}positions"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "position by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}positions/:id",
+							"host": [
+								"{{HOST}}positions"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "position by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}positions/:id",
+							"host": [
+								"{{HOST}}positions"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "applicants",
+			"item": [
+				{
+					"name": "create applicants",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// const jsonBody = JSON.parse(responseBody);\r",
+									"\r",
+									"// pm.environment.set(\"itemId\", jsonBody._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"alina22syniavska@gmail.com\",\r\n    \"categories\": [\r\n        \"angular\",\r\n        \"react\"\r\n    ],\r\n    \"japaneseKnowledge\": true,\r\n    \"level\": \"middle\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}applicants",
+							"host": [
+								"{{HOST}}applicants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "applicant by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"you.mail4@mail.run\",\r\n    \"categories\": [\"react\", \"angular\",\r\n        \"nodejs\"],\r\n    \"japaneseKnowledge\": false,\r\n    \"level\": \"middle\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}applicants/:id",
+							"host": [
+								"{{HOST}}applicants"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "applicant by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}applicants/:id",
+							"host": [
+								"{{HOST}}applicants"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "applicant by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}applicants/:id",
+							"host": [
+								"{{HOST}}applicants"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "9"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
