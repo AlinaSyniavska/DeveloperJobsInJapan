@@ -18,17 +18,17 @@ module.exports = {
 
             const positionsForResponse = positions.map(position => positionPresenter.positionResponse(position));
 
-            await emailService.sendMail(
+/*            await emailService.sendMail(
                 'alina22syniavska@gmail.com',
                 emailActionEnum.WELCOME,
                 {email, positionsForResponse}
-            )
+            )*/
 
-/*            await emailService.sendMail(
+            await emailService.sendMail(
                 email,
                 emailActionEnum.WELCOME,
                 {email, positionsForResponse}
-            )*/
+            )
         } catch (e) {
             next(e);
         }

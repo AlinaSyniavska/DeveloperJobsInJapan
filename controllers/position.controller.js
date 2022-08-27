@@ -29,16 +29,16 @@ module.exports = {
             res.sendStatus(201);
 
             const applicants = await searchForSubscription.searchRecord({category, level, japanese: japaneseRequired}, Applicant);
-            applicants.forEach(applicant => emailService.sendMail(
+/*            applicants.forEach(applicant => emailService.sendMail(
                 'alina22syniavska@gmail.com',
                 emailActionEnum.POSITION_ADD,
                 {category, level, company, description, japaneseRequired: japaneseKnowledge}
-            ))
-            /*applicants.forEach(applicant => emailService.sendMail(
+            ))*/
+            applicants.forEach(applicant => emailService.sendMail(
                 applicant.email,
                 emailActionEnum.POSITION_ADD,
                 {category, level, company, description, japaneseRequired: japaneseKnowledge}
-            ))*/
+            ))
         } catch (e) {
             next(e);
         }
@@ -76,20 +76,16 @@ module.exports = {
             res.sendStatus(204);
 
             const applicants = await searchForSubscription.searchRecord({category, level, japanese: japaneseRequired}, Applicant);
-            applicants.forEach(applicant => emailService.sendMail(
+/*            applicants.forEach(applicant => emailService.sendMail(
                 'alina22syniavska@gmail.com',
                 emailActionEnum.POSITION_REMOVE,
                 {category, level, company, description, japaneseRequired: japaneseKnowledge}
-            ))
-            /*applicants.forEach(applicant => emailService.sendMail(
+            ))*/
+            applicants.forEach(applicant => emailService.sendMail(
                 applicant.email,
                 emailActionEnum.POSITION_REMOVE,
                 {category, level, company, description, japaneseRequired: japaneseKnowledge}
-            ))*/
-
-
-
-
+            ))
         } catch (e) {
             next(e);
         }

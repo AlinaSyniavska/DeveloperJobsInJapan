@@ -26,7 +26,7 @@ module.exports = {
             })
         }
 
-        console.log(JSON.stringify(searchObject, null, 2));
+        // console.log(JSON.stringify(searchObject, null, 2));
 
         return searchObject;
     },
